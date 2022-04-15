@@ -2,6 +2,8 @@ import { MutableRefObject, useEffect, useState } from "react";
 
 export const useScroll = (scrollRef: MutableRefObject<Element | null>) => {
   const [endOfScroll, setEndOfScroll] = useState(false);
+  const [ scrollPosition , setScrollPosition] = useState(0);
+  const [scrollHeight, setScrollHeight] = useState(0);
 
   useEffect(() => {
     const scroll = scrollRef.current;
@@ -19,16 +21,17 @@ export const useScroll = (scrollRef: MutableRefObject<Element | null>) => {
   const getDistanceFromBottom = (): number => {
     if (scrollRef.current) {
       const { scrollTop, clientHeight, scrollHeight } = scrollRef.current;
-      return Math.ceil(scrollHeight) - Math.ceil(scrollTop + clientHeight)
+      setScrollHeight(scrollHeight-clientHeight);
+      setScrollPosition(scrollTop);      
+      return Math.ceil(scrollTop)
     }
-
     return Infinity;
   };
 
   const scrollBottom = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollTo({
-        top: scrollRef.current.scrollHeight,
+        top: 0,
         behavior: 'smooth'
       });
     }
@@ -38,6 +41,8 @@ export const useScroll = (scrollRef: MutableRefObject<Element | null>) => {
     scrollBottom,
     endOfScroll,
     updateEndOfScroll,
-    getDistanceFromBottom
+    getDistanceFromBottom,
+    scrollPosition,
+    scrollHeight
   }
 };

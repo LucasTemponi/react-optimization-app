@@ -1,6 +1,6 @@
 import { useChat } from "../../contexts/chat.context";
 
-export const ChatHeader = () => {
+export const ChatHeader:React.FC = () => {
   const chat = useChat();
   const contato = chat.participantes.find(p => !p.usuarioAtual);
 

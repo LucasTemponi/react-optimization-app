@@ -1,21 +1,23 @@
-import { MutableRefObject, useEffect, useRef } from "react";
+import { MutableRefObject, useCallback, useEffect,useRef, useState } from "react";
 import { useChat } from "../../contexts/chat.context";
 import { useScroll } from "../../hooks/useScroll";
 import { ChatMessage } from "../ChatMessage";
 import { ChatMessageListBottomScrollButton } from "../ChatMessageListBottomScrollButton";
 import { MyChatMessage } from "../MyChatMessage";
 
-// número totalmente arbitrário...
-const TAMANHO_MEDIO_MENSAGEM_PX = 300;
 export const ChatMessageList = () => {
   const scrollRef: MutableRefObject<Element | null> = useRef(null);
   const { mensagens, buscaMensagem, setMensagens } = useChat();
+  const [pagina,setPagina] = useState(1);
+
   const {
     scrollBottom,
     endOfScroll,
     updateEndOfScroll,
-    getDistanceFromBottom
+    scrollPosition,
+    scrollHeight,
   } = useScroll(scrollRef);
+
 
   useEffect(() => {
     scrollRef.current = document.querySelector('#mensagens');
@@ -27,15 +29,19 @@ export const ChatMessageList = () => {
   }, [mensagens, updateEndOfScroll]);
 
   useEffect(() => {
-    const novaMensagem = mensagens[0];
-    const distanceFromBottom = getDistanceFromBottom();
-    const lerProximaMensagem = distanceFromBottom < TAMANHO_MEDIO_MENSAGEM_PX;
-    const minhaMensagem = novaMensagem?.autor.usuarioAtual
-
-    if (minhaMensagem || lerProximaMensagem) {
+    if (endOfScroll) {
       lerNovasMensagens();
     }
   }, [mensagens.length]);
+
+  useEffect(() => {
+    const shouldLoadPage = Math.abs(scrollPosition) > 0.8*(scrollHeight)
+     if ( shouldLoadPage && pagina*20<=mensagens.length){
+      setPagina(pagina+1);   
+      console.log(`'NOVA PÁGINA ===================Scroll position:${scrollPosition}\n Scroll Height: ${scrollHeight}\n Pagina: ${pagina}`);
+     }
+  }, [scrollPosition]);
+
 
   const lerNovasMensagens = () => {
     scrollBottom();
@@ -46,15 +52,15 @@ export const ChatMessageList = () => {
   };
 
   return (
-    <div id="mensagens" className="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-purple scrollbar-thumb-rounded scrollbar-track-indigo-lighter scrollbar-w-2 scrolling-touch">
+    <div id="mensagens" className="flex flex-col-reverse space-y-4 p-3 overflow-y-auto scrollbar-thumb-purple scrollbar-thumb-rounded scrollbar-track-indigo-lighter scrollbar-w-2 scrolling-touch">
       {
         [...mensagens]
-        .reverse()
+        .slice(0, pagina * 20)
         .filter(mensagem => mensagem.texto.match(new RegExp(buscaMensagem, 'i')))
         .map(mensagem => (
           mensagem.autor.usuarioAtual ?
-            <MyChatMessage mensagem={ mensagem }  /> :
-            <ChatMessage mensagem={ mensagem } />
+            <MyChatMessage key={mensagem.id} mensagem={ mensagem }  /> :
+            <ChatMessage key={mensagem.id} mensagem={ mensagem } />
         ))
       }
       {
