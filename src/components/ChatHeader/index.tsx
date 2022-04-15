@@ -1,9 +1,18 @@
+import { useEffect, useRef, useState } from "react";
 import { useChat } from "../../contexts/chat.context";
 
 export const ChatHeader:React.FC = () => {
   const chat = useChat();
   const contato = chat.participantes.find(p => !p.usuarioAtual);
+  const [teste,setTeste] = useState('')
+  const debounceId = useRef(0);
 
+  useEffect(() => {
+    clearTimeout(debounceId.current);
+    debounceId.current = window.setTimeout(()=>chat.setBuscaMensagem(teste), 250);
+  },[teste])
+//  chat.setBuscaMensagem(event?.target.value)
+  
   return (
     <div className="flex sm:items-center justify-between py-3 border-b-2 border-gray-200">
       <div className="relative flex items-center space-x-4">
@@ -39,8 +48,8 @@ export const ChatHeader:React.FC = () => {
             type="text"
             placeholder="Buscar mensagem"
             className="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-12 bg-gray-200 rounded-md py-3"
-            value={ chat.buscaMensagem }
-            onChange={ event => chat.setBuscaMensagem(event?.target.value) }
+            value={ teste }
+            onChange={ event => setTeste(event?.target.value) }
           />
         </div>
       </div>

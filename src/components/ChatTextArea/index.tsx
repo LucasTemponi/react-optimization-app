@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useChat } from "../../contexts/chat.context";
 
-export const ChatTextArea = () => {
+export const ChatTextArea = memo(() => {
   const [ texto, setTexto  ] = useState('');
   const chat = useChat();
 
@@ -51,4 +51,4 @@ export const ChatTextArea = () => {
       </div>
     </div>
   );
-};
+});

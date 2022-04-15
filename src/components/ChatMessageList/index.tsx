@@ -1,4 +1,4 @@
-import { MutableRefObject, useCallback, useEffect,useRef, useState } from "react";
+import { MutableRefObject, useEffect,useRef, useState } from "react";
 import { useChat } from "../../contexts/chat.context";
 import { useScroll } from "../../hooks/useScroll";
 import { ChatMessage } from "../ChatMessage";
@@ -55,8 +55,8 @@ export const ChatMessageList = () => {
     <div id="mensagens" className="flex flex-col-reverse space-y-4 p-3 overflow-y-auto scrollbar-thumb-purple scrollbar-thumb-rounded scrollbar-track-indigo-lighter scrollbar-w-2 scrolling-touch">
       {
         [...mensagens]
-        .slice(0, pagina * 20)
         .filter(mensagem => mensagem.texto.match(new RegExp(buscaMensagem, 'i')))
+        .slice(0, pagina * 20)
         .map(mensagem => (
           mensagem.autor.usuarioAtual ?
             <MyChatMessage key={mensagem.id} mensagem={ mensagem }  /> :
@@ -74,3 +74,5 @@ export const ChatMessageList = () => {
     </div>
   );
 }
+
+export default ChatMessageList
