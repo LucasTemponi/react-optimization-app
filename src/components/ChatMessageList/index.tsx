@@ -26,7 +26,7 @@ export const ChatMessageList = () => {
 
   useEffect(() => {
     updateEndOfScroll();
-  }, [mensagens, updateEndOfScroll]);
+  }, [scrollPosition]);
 
   useEffect(() => {
     if (endOfScroll) {
@@ -38,7 +38,6 @@ export const ChatMessageList = () => {
     const shouldLoadPage = Math.abs(scrollPosition) > 0.8*(scrollHeight)
      if ( shouldLoadPage && pagina*20<=mensagens.length){
       setPagina(pagina+1);   
-      console.log(`'NOVA PÁGINA ===================Scroll position:${scrollPosition}\n Scroll Height: ${scrollHeight}\n Pagina: ${pagina}`);
      }
   }, [scrollPosition]);
 
@@ -57,7 +56,7 @@ export const ChatMessageList = () => {
         [...mensagens]
         .filter(mensagem => mensagem.texto.match(new RegExp(buscaMensagem, 'i')))
         .slice(0, pagina * 20)
-        .map(mensagem => (
+        .map(mensagem => (          
           mensagem.autor.usuarioAtual ?
             <MyChatMessage key={mensagem.id} mensagem={ mensagem }  /> :
             <ChatMessage key={mensagem.id} mensagem={ mensagem } />

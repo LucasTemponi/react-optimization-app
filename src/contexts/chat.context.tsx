@@ -99,6 +99,6 @@ export const useChat = () => {
   if (!context) {
     throw new Error('Você somente pode usar este hook debaixo de um <AuthContextProvider>');
   }
-
+  
   return context;
 };

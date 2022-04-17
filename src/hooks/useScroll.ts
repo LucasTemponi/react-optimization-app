@@ -15,9 +15,12 @@ export const useScroll = (scrollRef: MutableRefObject<Element | null>) => {
   }, [scrollRef.current]);
 
   const updateEndOfScroll = () => {
-    setEndOfScroll(getDistanceFromBottom() === 0);
-  };
-
+    const clientHeight = scrollRef.current?.clientHeight
+    if (clientHeight){
+      setEndOfScroll(Math.abs(getDistanceFromBottom()) <  clientHeight/3);    
+  
+    };
+  }
   const getDistanceFromBottom = (): number => {
     if (scrollRef.current) {
       const { scrollTop, clientHeight, scrollHeight } = scrollRef.current;
