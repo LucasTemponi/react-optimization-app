@@ -73,5 +73,3 @@ export const ChatMessageList = () => {
     </div>
   );
 }
-
-export default ChatMessageList

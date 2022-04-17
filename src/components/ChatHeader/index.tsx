@@ -9,7 +9,7 @@ export const ChatHeader:React.FC = () => {
 
   useEffect(() => {
     clearTimeout(debounceId.current);
-    debounceId.current = window.setTimeout(()=>chat.setBuscaMensagem(teste), 250);
+    debounceId.current = window.setTimeout(()=>chat.setBuscaMensagem(teste),250);
   },[teste])
 //  chat.setBuscaMensagem(event?.target.value)
   
