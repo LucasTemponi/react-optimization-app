@@ -33,19 +33,25 @@ export const ColorResponsive = () => {
   const debouncedId = useRef(0)
 
   useEffect(() => {
-    const alteraCor = () => {
-
-      debouncedId.current = window.setTimeout(alteraCor,3000)
+    const alteraCor = () => {      
+      console.log('mudou de cor')
       const width = window.innerWidth;
       const index = breakpoints.findIndex(breakpoint => width < breakpoint);
       const breakpointIndex = index === -1 ? 0 : index;
       setColor(colors[breakpointIndex]);
     }
-     
-    alteraCor();  
-    window.addEventListener('resize',()=>{ clearTimeout(debouncedId.current); alteraCor()});
+
+    alteraCor()
+    window.addEventListener('resize',()=>{
+      clearTimeout(debouncedId.current);
+      debouncedId.current = window.setTimeout(alteraCor,250)
+      console.log('WTF?!?!?')
+    })
     return () => {
-      window.removeEventListener('resize', alteraCor);
+      window.removeEventListener('resize', ()=>{
+        console.log('Remove')
+        clearTimeout(debouncedId.current);
+      });
     }
   }, []);
 
